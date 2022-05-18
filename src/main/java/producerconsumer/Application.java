@@ -5,7 +5,7 @@ public class Application {
     public static void main(String[] args) {
         WorkQueue workQueue = new WorkQueue(5);
 
-        Consumer consumer = new Consumer(10,workQueue);
+        Consumer consumer1 = new Consumer(10,workQueue);
         Consumer consumer2 = new Consumer(5,workQueue);
         Producer producer = new Producer(10,workQueue);
 
@@ -13,9 +13,9 @@ public class Application {
 
         Thread pThread = new Thread(producer);
         pThread.setName("producer");
-        Thread cThread1 = new Thread(consumer);
+        Thread cThread1 = new Thread(consumer1);
         cThread1.setName("cThread1");
-        Thread cThread2 = new Thread(consumer);
+        Thread cThread2 = new Thread(consumer2);
         cThread2.setName("cThread2");
 
 
@@ -26,8 +26,7 @@ public class Application {
         System.out.println("_______________________________");
 
         try {
-            Thread.sleep(5000);
-
+            Thread.sleep(10000);
             cThread1.interrupt();
             cThread2.interrupt();
         } catch (InterruptedException e) {

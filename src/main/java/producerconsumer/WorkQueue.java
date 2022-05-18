@@ -8,11 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class WorkQueue {
 
+    private final int maxSizeOfWorkQueue;
     public Queue<Integer> worksToDo;
     Lock lock;
     Condition emptylock;
     Condition fulllock;
-    private final int maxSizeOfWorkQueue;
 
 
     WorkQueue(int maxSizeOfWorkQueue) {
@@ -27,14 +27,14 @@ public class WorkQueue {
         lock.lock();
         try {
             while (worksToDo.size() == maxSizeOfWorkQueue) {
-
                 fulllock.await();
             }
-
+            lock.unlock();
+            Thread.sleep(500);
+            lock.lock();
             worksToDo.add(i);
             System.out.println("Created Work: " + worksToDo.toString());
             emptylock.signalAll();
-            lock.unlock();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -45,23 +45,23 @@ public class WorkQueue {
 
     int doWork() {
         lock.lock();
-        while (worksToDo.size() == 0) {
-            try {
+        int n = -4;
+        try {
+            while (worksToDo.size() == 0) {
+                System.out.println("WAITING!! " + Thread.currentThread().getName() + " is waiting for job");
                 emptylock.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
-            if (Thread.currentThread().isInterrupted()) {
-                return -4;
-            }
+
+            n = worksToDo.poll();
+            System.out.println(Thread.currentThread().getName() + " Completed Work: " + n);
+            fulllock.signalAll();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
         }
-        int n = worksToDo.poll();
-        System.out.println(Thread.currentThread().getName() + " Completed Work: " + n);
-        fulllock.signalAll();
-        lock.unlock();
         return n;
-
-
     }
 
 }
