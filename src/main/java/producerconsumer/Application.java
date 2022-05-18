@@ -5,7 +5,7 @@ public class Application {
     public static void main(String[] args) {
         WorkQueue workQueue = new WorkQueue(5);
 
-        Consumer consumer = new Consumer(5,workQueue);
+        Consumer consumer = new Consumer(10,workQueue);
         Consumer consumer2 = new Consumer(5,workQueue);
         Producer producer = new Producer(10,workQueue);
 
@@ -24,6 +24,15 @@ public class Application {
         cThread2.start();
 
         System.out.println("_______________________________");
+
+        try {
+            Thread.sleep(5000);
+
+            cThread1.interrupt();
+            cThread2.interrupt();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
