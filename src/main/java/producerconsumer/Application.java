@@ -1,14 +1,16 @@
 package producerconsumer;
 
+import threadlocal.UserService;
+
 public class Application {
 
     public static void main(String[] args) {
+
         WorkQueue workQueue = new WorkQueue(5);
 
         Consumer consumer1 = new Consumer(10,workQueue);
         Consumer consumer2 = new Consumer(5,workQueue);
         Producer producer = new Producer(10,workQueue);
-
 
 
         Thread pThread = new Thread(producer);
